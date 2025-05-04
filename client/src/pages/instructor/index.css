@@ -1,0 +1,106 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f3f4f6; /* Light gray background */
+  }
+  
+  /* Sidebar styles */
+  aside {
+    background-color: #ffffff; /* White background for sidebar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  aside h2 {
+    font-size: 1.5rem; /* Matches text-2xl */
+    font-weight: bold;
+    color: #1f2937; /* Dark gray text */
+    margin-bottom: 1.5rem; /* Matches mb-6 */
+  }
+  
+  aside nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Matches gap-2 */
+  }
+  
+  aside nav button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Matches gap-2 */
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem; /* Matches px-4 py-2 */
+    border-radius: 0.5rem; /* Matches rounded-lg */
+    background-color: transparent;
+    color: #374151; /* Gray text */
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  aside nav button:hover {
+    background-color: #e5e7eb; /* Light gray hover background */
+    color: #1f2937; /* Darker gray text */
+  }
+  
+  aside nav button.active {
+    background-color: #3b82f6; /* Blue background for active tab */
+    color: #fffcfc; /* White text for active tab */
+  }
+  
+  /* Main content styles */
+  main {
+    padding: 2rem; /* Matches p-8 */
+    background-color: #fffcfc; /* Very light gray background */
+  }
+  
+  main h1 {
+    font-size: 2rem; /* Matches text-3xl */
+    font-weight: bold;
+    color: #1f2937; /* Dark gray text */
+    margin-bottom: 2rem; /* Matches mb-8 */
+  }
+  
+  main .tabs-content {
+    background-color: #ffffff; /* White background for tabs */
+    border-radius: 0.75rem; /* Matches rounded-xl */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 1.5rem; /* Matches p-6 */
+  }
+  
+  /* Button styles */
+  button {
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  button.secondary {
+    background-color: #3b82f6; /* Blue background */
+    color: #ffffff; /* White text */
+  }
+  
+  button.ghost {
+    background-color: transparent;
+    color: #374151; /* Gray text */
+  }
+  
+  /* Mobile top bar */
+  .mobile-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem; /* Matches mb-4 */
+  }
+  
+  .mobile-top-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .mobile-top-bar h1 {
+    font-size: 1.25rem; /* Matches text-xl */
+    font-weight: 600; /* Matches font-semibold */
+    color: #000000; /* Matches text-gray-800 */
+  }
