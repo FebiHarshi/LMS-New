@@ -181,13 +181,13 @@ export async function generateCertificate({ userId, courseId, userName, courseNa
   return data;
 }
 
-export async function fetchResumeAutomationData() {
-  const { data } = await axiosInstance.get(`/resume-automation/get`);
+export async function fetchResumeAutomationData(email) {
+  const { data } = await axiosInstance.post(`/resume-automation/fetchByEmail`,{userEmail: email});
   return data;
 } 
 
 export async function generateResumeAutomationData(formData) {
-  const { data } = await axiosInstance.post(`/resume-automation/generate`, formData);
+  const {data} = await axiosInstance.post(`/resume-automation/generate`, formData,{ responseType: 'blob' });
   return data;
 }
 

@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
 import axios from 'axios';
+import { generateResumeAutomationData,fetchResumeAutomationData } from '@/services';
+import { AuthContext } from "@/context/auth-context";
 
 function App() {
+  const { auth } = useContext(AuthContext);
   // State to store form data
   const [formData, setFormData] = useState({
+    userName:'',
+    userEmail:'',
     personalDetails: {
       fullName: '',
       contactNumber: '',
@@ -36,7 +41,7 @@ function App() {
       { id: 10, name: 'TypeScript', category: 'Programming Languages' },
       { id: 11, name: 'Kotlin', category: 'Programming Languages' },
       { id: 12, name: 'Rust', category: 'Programming Languages' },
-      
+
       // Frameworks & Libraries
       { id: 13, name: 'React', category: 'Frameworks & Libraries' },
       { id: 14, name: 'Angular', category: 'Frameworks & Libraries' },
@@ -50,7 +55,7 @@ function App() {
       { id: 22, name: 'ASP.NET', category: 'Frameworks & Libraries' },
       { id: 23, name: 'Ruby on Rails', category: 'Frameworks & Libraries' },
       { id: 24, name: 'Flutter', category: 'Frameworks & Libraries' },
-      
+
       // Databases
       { id: 25, name: 'MySQL', category: 'Databases' },
       { id: 26, name: 'PostgreSQL', category: 'Databases' },
@@ -62,7 +67,7 @@ function App() {
       { id: 32, name: 'Firebase', category: 'Databases' },
       { id: 33, name: 'DynamoDB', category: 'Databases' },
       { id: 34, name: 'Cassandra', category: 'Databases' },
-      
+
       // Cloud & DevOps
       { id: 35, name: 'AWS', category: 'Cloud & DevOps' },
       { id: 36, name: 'Azure', category: 'Cloud & DevOps' },
@@ -74,7 +79,7 @@ function App() {
       { id: 42, name: 'GitHub Actions', category: 'Cloud & DevOps' },
       { id: 43, name: 'Terraform', category: 'Cloud & DevOps' },
       { id: 44, name: 'Ansible', category: 'Cloud & DevOps' },
-      
+
       // Tools & Other
       { id: 45, name: 'VS Code', category: 'Tools & Other' },
       { id: 46, name: 'IntelliJ IDEA', category: 'Tools & Other' },
@@ -85,7 +90,7 @@ function App() {
       { id: 51, name: 'Illustrator', category: 'Tools & Other' },
       { id: 52, name: 'Postman', category: 'Tools & Other' },
       { id: 53, name: 'Swagger', category: 'Tools & Other' },
-      
+
       // Soft Skills
       { id: 54, name: 'Communication', category: 'Soft Skills' },
       { id: 55, name: 'Leadership', category: 'Soft Skills' },
@@ -190,7 +195,7 @@ function App() {
   // Handle skill selection
   const toggleSkill = (skillId) => {
     const skill = formData.availableSkills.find(s => s.id === skillId);
-    
+
     if (formData.skills.some(s => s.id === skillId)) {
       // Remove the skill
       setFormData({
@@ -211,21 +216,21 @@ function App() {
     e.preventDefault();
     const customSkillInput = document.getElementById('customSkill');
     const customSkillCategory = document.getElementById('customSkillCategory');
-    
+
     if (customSkillInput.value.trim() === '') return;
-    
+
     const newSkill = {
       id: `custom-${formData.customSkills.length + 1}`,
       name: customSkillInput.value.trim(),
       category: customSkillCategory.value || 'Other',
     };
-    
+
     setFormData({
       ...formData,
       customSkills: [...formData.customSkills, newSkill],
       skills: [...formData.skills, newSkill],
     });
-    
+
     customSkillInput.value = '';
   };
 
@@ -392,171 +397,31 @@ function App() {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   };
+  useEffect(() => {
+    fetchResumeData()
+    }, []);
+
+  const fetchResumeData = async () => {
+    var resume = await fetchResumeAutomationData(auth?.user?.userEmail);
+    setFormData(resume.data)
+    console.log(resume)
+  }
 
   // Function to generate and print the resume
-  const printResume = () => {
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${formData.personalDetails.fullName} - Resume</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
-          }
-          .header {
-            text-align: center;
-            margin-bottom: 20px;
-          }
-          .header h1 {
-            margin-bottom: 5px;
-            color: #2c3e50;
-          }
-          .contact-info {
-            text-align: center;
-            margin-bottom: 20px;
-          }
-          .section {
-            margin-bottom: 20px;
-          }
-          .section-title {
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
-            color: #2c3e50;
-          }
-          .education-item, .experience-item, .project-item {
-            margin-bottom: 15px;
-          }
-          .item-title {
-            font-weight: bold;
-          }
-          .item-subtitle {
-            font-style: italic;
-          }
-          .responsibility {
-            margin-left: 20px;
-          }
-          .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-          }
-          .skill-category {
-            margin-bottom: 10px;
-            width: 100%;
-          }
-          .skill-category-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-          }
-          .skill-tag {
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            padding: 3px 8px;
-            margin: 2px;
-            display: inline-block;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>${formData.personalDetails.fullName}</h1>
-        </div>
-        
-        <div class="contact-info">
-          ${formData.personalDetails.contactNumber} | 
-          ${formData.personalDetails.emailAddress} | 
-          <a href="${formData.personalDetails.linkedinUrl}" target="_blank">LinkedIn</a>
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Profile Summary</h2>
-          <p>${formData.profileSummary}</p>
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Education</h2>
-          ${formData.education.map(edu => `
-            <div class="education-item">
-              <div class="item-title">${edu.degree}</div>
-              <div class="item-subtitle">${edu.institutionName}, ${edu.location}</div>
-              <div>${formatDate(edu.startDate)} - ${formatDate(edu.endDate)}</div>
-              <div>CGPA/Percentage: ${edu.percentage}</div>
-            </div>
-          `).join('')}
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Skills</h2>
-          <div class="skills-container">
-            ${(() => {
-              // Group skills by category
-              const skillsByCategory = {};
-              formData.skills.forEach(skill => {
-                if (!skillsByCategory[skill.category]) {
-                  skillsByCategory[skill.category] = [];
-                }
-                skillsByCategory[skill.category].push(skill);
-              });
-              
-              // Generate HTML for each category
-              return Object.keys(skillsByCategory).map(category => `
-                <div class="skill-category">
-                  <div class="skill-category-title">${category}:</div>
-                  <div>
-                    ${skillsByCategory[category].map(skill => `
-                      <span class="skill-tag">${skill.name}</span>
-                    `).join('')}
-                  </div>
-                </div>
-              `).join('');
-            })()}
-          </div>
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Professional Experience</h2>
-          ${formData.experience.map(exp => `
-            <div class="experience-item">
-              <div class="item-title">${exp.jobTitle}</div>
-              <div class="item-subtitle">${exp.companyName}, ${exp.location}</div>
-              <div>${formatDate(exp.startDate)} - ${exp.endDate ? formatDate(exp.endDate) : 'Present'}</div>
-              <ul>
-                ${exp.responsibilities.map(resp => `
-                  <li>${resp}</li>
-                `).join('')}
-              </ul>
-            </div>
-          `).join('')}
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Certifications</h2>
-          <p>${formData.certifications}</p>
-        </div>
-        
-        <div class="section">
-          <h2 class="section-title">Projects</h2>
-          ${formData.projects.map(proj => `
-            <div class="project-item">
-              <div class="item-title">${proj.title}</div>
-              <div><strong>Tech Stack:</strong> ${proj.techStack}</div>
-              <div><strong>Duration:</strong> ${formatDate(proj.startDate)} - ${formatDate(proj.endDate)}</div>
-              <div><strong>Description:</strong> ${proj.description}</div>
-              <div><strong>Contributions:</strong> ${proj.contributions}</div>
-            </div>
-          `).join('')}
-        </div>
-      </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.setTimeout(() => {
-      printWindow.print();
-    }, 500);
+  const printResume = async () => {
+    formData.userName = auth?.user?.userName;
+    formData.userEmail = auth?.user?.userEmail;
+    var response = await generateResumeAutomationData(formData);
+    console.log(auth?.user?.userName);
+    console.log(auth?.user?.userEmail);
+    const blob = new Blob([response], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resume.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const saveResumeToDB = async () => {
@@ -592,7 +457,7 @@ function App() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold text-center mb-8">Resume Builder</h1>
-      
+
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Personal Details Section */}
         <div className="bg-gray-50 p-6 rounded-lg shadow">
@@ -756,7 +621,7 @@ function App() {
         {/* Skills Section */}
         <div className="bg-gray-50 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">🛠️ Skills</h2>
-          
+
           {/* Selected Skills Display */}
           {formData.skills.length > 0 && (
             <div className="mb-6">
@@ -777,7 +642,7 @@ function App() {
               </div>
             </div>
           )}
-          
+
           {/* Custom Skill Input */}
           <div className="mb-6">
             <h3 className="font-medium mb-2">Add Custom Skill:</h3>
@@ -813,11 +678,11 @@ function App() {
               </button>
             </div>
           </div>
-          
+
           {/* Available Skills */}
           <div className="mb-4">
             <h3 className="font-medium mb-2">Select from Available Skills:</h3>
-            
+
             {/* Search Bar */}
             <div className="mb-4">
               <input
@@ -838,7 +703,7 @@ function App() {
                 }}
               />
             </div>
-            
+
             {/* Skills by Category */}
             <div className="space-y-4">
               {Object.entries(getGroupedSkills()).map(([category, skills]) => (
@@ -846,17 +711,16 @@ function App() {
                   <h4 className="font-medium text-gray-700 mb-2">{category}</h4>
                   <div className="flex flex-wrap gap-2">
                     {skills.map(skill => (
-                      <div 
-                        key={skill.id} 
+                      <div
+                        key={skill.id}
                         className="skill-item cursor-pointer"
                         data-name={skill.name}
                       >
                         <div
-                          className={`px-3 py-1 rounded-full border ${
-                            formData.skills.some(s => s.id === skill.id)
+                          className={`px-3 py-1 rounded-full border ${formData.skills.some(s => s.id === skill.id)
                               ? 'bg-blue-500 text-white'
                               : 'bg-white hover:bg-gray-100'
-                          }`}
+                            }`}
                           onClick={() => toggleSkill(skill.id)}
                         >
                           {skill.name}
@@ -868,7 +732,7 @@ function App() {
               ))}
             </div>
           </div>
-          
+
           {/* Custom Skills Display */}
           {formData.customSkills.length > 0 && (
             <div className="mt-6 border-t pt-4">
@@ -952,7 +816,7 @@ function App() {
                   />
                 </div>
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Responsibilities/Achievements</label>
                 {exp.responsibilities.map((resp, respIndex) => (
@@ -983,7 +847,7 @@ function App() {
                   Add Point
                 </button>
               </div>
-              
+
               {formData.experience.length > 1 && (
                 <button
                   type="button"
@@ -1105,9 +969,9 @@ function App() {
             type="submit"
             className="px-8 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-bold text-lg"
           >
-            Generate Resume
+            Download Resume pdf
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={saveResumeToDB}
             className="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-bold text-lg"
@@ -1120,7 +984,7 @@ function App() {
             className="px-8 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-bold text-lg"
           >
             Download PDF
-          </button>
+          </button> */}
         </div>
       </form>
     </div>
