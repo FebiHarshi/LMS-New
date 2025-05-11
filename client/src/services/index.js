@@ -190,5 +190,48 @@ export async function generateResumeAutomationData(formData) {
   const {data} = await axiosInstance.post(`/resume-automation/generate`, formData,{ responseType: 'blob' });
   return data;
 }
-
-
+export async function fetchLearningPathways() {
+  const { data } = await axiosInstance.get(`/learning-pathways/get`);
+  return data;
+}
+export async function fetchLearningPathwayDetails(id) {
+  const { data } = await axiosInstance.get(
+    `/learning-pathways/get/details/${id}`
+  );
+  return data;
+}
+export async function fetchLearningPathwayCourses(id) {
+  const { data } = await axiosInstance.get(
+    `/learning-pathways/get/courses/${id}`
+  );
+  return data;
+}
+export async function fetchLearningPathwayProgress(userId, pathwayId) {
+  const { data } = await axiosInstance.get(
+    `/learning-pathways/get/progress/${userId}/${pathwayId}`
+  );
+  return data;
+}
+export async function markLearningPathwayAsCompleted(userId, pathwayId) {
+  const { data } = await axiosInstance.post(
+    `/learning-pathways/mark-as-completed`,
+    {
+      userId,
+      pathwayId,
+    }
+  );
+  return data;
+}
+export async function fetchLearningPathwayCertificate(userId, pathwayId) {
+  const { data } = await axiosInstance.get(
+    `/learning-pathways/get/certificate/${userId}/${pathwayId}`
+  );
+  return data;
+}
+export async function generateLearningPathwayCertificate(formData) {
+  const { data } = await axiosInstance.post(
+    `/learning-pathways/generate/certificate`,
+    formData
+  );
+  return data;
+}

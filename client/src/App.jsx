@@ -16,7 +16,7 @@ import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
 import CertificatePage from "./pages/student/certificate-page";
 import ResumeAutomationPage from "./pages/student/resume-automation";
-
+import LearningPathwayDashboard from "./components/instructor-view/learning-pathways";
 function App() {
   const { auth } = useContext(AuthContext);
 
@@ -66,6 +66,16 @@ function App() {
         }
       />
       <Route
+        path="/instructor/learning-pathways"
+        element={
+          <RouteGuard
+            element={<LearningPathwayDashboard />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
         path="/"
         element={
           <RouteGuard
@@ -75,7 +85,6 @@ function App() {
           />
         }
       >
-        <Route path="" element={<StudentHomePage />} />
         <Route path="home" element={<StudentHomePage />} />
         <Route path="courses" element={<StudentViewCoursesPage />} />
         <Route

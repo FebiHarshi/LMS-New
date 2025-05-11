@@ -13,7 +13,7 @@ function App() {
       fullName: '',
       contactNumber: '',
       emailAddress: '',
-      linkedinUrl: '',
+      location:'',
     },
     profileSummary: '',
     education: [
