@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { ChevronDown, ChevronUp, CircleUser, BookOpen, BarChart, ArrowDownUp, Users } from 'lucide-react';
+import { fetchLearningPathways } from '@/services';
 
 export default function LearningPathwayDashboard() {
   // Mock data for students, courses, and modules
@@ -157,6 +158,17 @@ export default function LearningPathwayDashboard() {
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [filterText, setFilterText] = useState('');
+
+  
+    useEffect(() => {
+      fetchLearningPathData()
+      }, []);
+  
+    const fetchLearningPathData = async () => {
+      var response = await fetchLearningPathways();
+      setData(response.data)
+      console.log(response)
+    }
 
   // Toggle course expansion
   const toggleCourse = (courseId) => {

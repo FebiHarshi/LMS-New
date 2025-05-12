@@ -4,6 +4,9 @@ const ResumeSchema = new mongoose.Schema({
     "userName": {
         "type": "String"
     },
+    "userId": {
+        "type": "String"
+    },
     "userEmail": {
         "type": "String"
     },

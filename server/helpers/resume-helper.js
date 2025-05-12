@@ -72,7 +72,30 @@ exports.getHTMLfromFormData = (formData) =>{
         </style>
       </head>
       <body>
-        <div class="header">
+        ${GetHeaderSection(formData)}
+        
+        ${GetProfileSummarySection(formData)}
+        
+        ${GetEducationSection(formData)}
+        
+        ${GetSkillsSection(formData)}
+
+        ${GetCoursesSection(formData)}
+        
+        ${GetExperienceSection(formData)}
+        
+        ${GetCertificationSection(formData)}
+        
+        ${GetProjectsSection(formData)}
+        
+      </body>
+      </html>
+    `
+}
+
+const GetHeaderSection = (formData) => {
+
+  return `<div class="header">
           <h1>${formData.personalDetails.fullName}</h1>
         </div>
         
@@ -80,14 +103,20 @@ exports.getHTMLfromFormData = (formData) =>{
           ${formData.personalDetails.contactNumber} | 
           ${formData.personalDetails.emailAddress} | 
           <a href="${formData.personalDetails.linkedinUrl}" target="_blank">LinkedIn</a>
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetProfileSummarySection = (formData) => {
+
+  return `<div class="section">
           <h2 class="section-title">Profile Summary</h2>
           <p>${formData.profileSummary}</p>
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetEducationSection = (formData) => {
+
+  return `<div class="section">
           <h2 class="section-title">Education</h2>
           ${formData.education.map(edu => `
             <div class="education-item">
@@ -97,9 +126,12 @@ exports.getHTMLfromFormData = (formData) =>{
               <div>CGPA/Percentage: ${edu.percentage}</div>
             </div>
           `).join('')}
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetSkillsSection = (formData) => {
+
+  return `<div class="section">
           <h2 class="section-title">Skills</h2>
           <div class="skills-container">
             ${(() => {
@@ -125,9 +157,12 @@ exports.getHTMLfromFormData = (formData) =>{
               `).join('');
             })()}
           </div>
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetExperienceSection = (formData) => {
+  if(!formData.experience) return '';
+  return `<div class="section">
           <h2 class="section-title">Professional Experience</h2>
           ${formData.experience.map(exp => `
             <div class="experience-item">
@@ -141,14 +176,20 @@ exports.getHTMLfromFormData = (formData) =>{
               </ul>
             </div>
           `).join('')}
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetCertificationSection = (formData)=>{
+  if(!formData.certifications) return '';
+  return `<div class="section">
           <h2 class="section-title">Certifications</h2>
           <p>${formData.certifications}</p>
-        </div>
-        
-        <div class="section">
+        </div>`
+}
+
+const GetProjectsSection = (formData) => {
+  if(!formData.projects) return '';
+  return `<div class="section">
           <h2 class="section-title">Projects</h2>
           ${formData.projects.map(proj => `
             <div class="project-item">
@@ -159,8 +200,17 @@ exports.getHTMLfromFormData = (formData) =>{
               <div><strong>Contributions:</strong> ${proj.contributions}</div>
             </div>
           `).join('')}
-        </div>
-      </body>
-      </html>
-    `
+        </div>`
+}
+
+const GetCoursesSection = (formData) => {
+  if(!formData.completedCourses) return '';
+  return `<div class="section">
+          <h2 class="section-title">Courses Completed</h2>
+          <ul>
+          ${formData.completedCourses.map(course => `
+            <li> Completed the course ${course.title} on ${formatDate(course.completionDate)} </li>
+          `).join('')}
+          </ul>
+        </div>`
 }

@@ -411,6 +411,7 @@ function App() {
   const printResume = async () => {
     formData.userName = auth?.user?.userName;
     formData.userEmail = auth?.user?.userEmail;
+    formData.userId = auth?.user?._id;
     var response = await generateResumeAutomationData(formData);
     console.log(auth?.user?.userName);
     console.log(auth?.user?.userEmail);
