@@ -17,13 +17,13 @@ import StudentViewCourseProgressPage from "./pages/student/course-progress";
 import CertificatePage from "./pages/student/certificate-page";
 import ResumeAutomationPage from "./pages/student/resume-automation";
 import LearningPathwayDashboard from "./components/instructor-view/learning-pathways";
+import AssessmentForm from "./components/instructor-view/Assessmentform";
 function App() {
   const { auth } = useContext(AuthContext);
 
   return (
-    
     <Routes>
-      <Route path="/homepage" element={<LMSHomepage/>} />
+      <Route path="/homepage" element={<LMSHomepage />} />
       <Route
         path="/auth"
         element={
@@ -43,8 +43,7 @@ function App() {
             user={auth?.user}
           />
         }
-      >
-      </Route>
+      ></Route>
       <Route
         path="/instructor/create-new-course"
         element={
@@ -74,6 +73,16 @@ function App() {
             user={auth?.user}
           />
         }
+      />
+      <Route
+        path="/instructor/assessment-form/:courseId"
+        element={
+          <RouteGuard
+            element={<AssessmentForm />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        } 
       />
       <Route
         path="/"
