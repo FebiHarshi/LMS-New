@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { generateCertificate } = require('../../controllers/student-controller/certificate-controller');
 const Course = require('../../models/Course');
@@ -20,7 +20,7 @@ router.get('/:courseId', async (req, res) => {
         if (!course) {
             return res.status(404).json({
                 success: false,
-                message: 'Course not found'
+                message: "Course not found"
             });
         }
 
@@ -42,7 +42,7 @@ router.get('/:courseId', async (req, res) => {
         console.error('Error in certificate route:', err);
         res.status(500).json({
             success: false,
-            message: 'Error retrieving course and certificate details'
+            message: "Error retrieving course and certificate details"
         });
     }
 });
