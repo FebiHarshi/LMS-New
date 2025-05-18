@@ -60,9 +60,9 @@ export default function LMSHomepage() {
                 <a href="#" className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                   Home
                 </a>
-                <a href="#" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                <Link to="/aboutus" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                   About Us
-                </a>
+                </Link>
                 <Link to="/courses" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                   Courses
                 </Link>
@@ -91,7 +91,7 @@ export default function LMSHomepage() {
                   User Login
                 </button>
               </Link>
-              <Link to="/instructorlogin">
+              <Link to="/auth">
                 <button className="px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Instructor Login
                 </button>
@@ -117,13 +117,13 @@ export default function LMSHomepage() {
         {mobileMenuOpen && (
           <div className="md:hidden">
             <div className="pt-2 pb-3 space-y-1">
-              <a href="#" className="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+              <a href="/homepage" className="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                 Home
               </a>
-              <a href="#" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+              <Link to="/aboutus" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                 About Us
-              </a>
-              <a href="#" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+              </Link>
+              <a href="/courses" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                 Courses
               </a>
             </div>
@@ -134,7 +134,7 @@ export default function LMSHomepage() {
                   User Login
                   </button>
                 </Link>
-                <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                <a href="/auth" className="block px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
                   Instructor Login
                 </a>
               </nav>
@@ -225,45 +225,21 @@ export default function LMSHomepage() {
       <div className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">About Us</h2>
+            <Link to="/aboutus" className="inline-block">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 hover:text-indigo-600 transition-colors">
+                About Us
+              </h2>
+            </Link>
             <p className="mt-4 max-w-2xl text-lg text-gray-500 lg:mx-auto">
               LMS LEARN is dedicated to making quality education accessible to everyone. 
               Our platform brings together learners and instructors from around the world.
             </p>
-          </div>
-
-          <div className="mt-10">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-100 text-indigo-600 mx-auto">
-                  <BookOpen size={24} />
-                </div>
-                <h3 className="mt-3 text-lg font-medium text-gray-900">Self-Paced Learning</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Learn at your own pace with 24/7 access to all course materials
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-100 text-indigo-600 mx-auto">
-                  <Award size={24} />
-                </div>
-                <h3 className="mt-3 text-lg font-medium text-gray-900">Expert Instructors</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Learn from industry experts with real-world experience
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-100 text-indigo-600 mx-auto">
-                  <Clock size={24} />
-                </div>
-                <h3 className="mt-3 text-lg font-medium text-gray-900">Lifetime Access</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  Purchase once and access your courses for life
-                </p>
-              </div>
-            </div>
+            <Link 
+              to="/aboutus" 
+              className="mt-4 inline-flex items-center text-indigo-600 hover:text-indigo-700"
+            >
+              Learn more about us <ChevronRight size={20} className="ml-1" />
+            </Link>
           </div>
         </div>
       </div>

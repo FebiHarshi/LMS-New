@@ -12,6 +12,8 @@ const studentCourseProgressRoutes = require("./routes/student-routes/course-prog
 const certificateRoutes = require('./routes/student-routes/certificate-routes');
 const instructorRoutes = require("./routes/instructor-routes/instructor-routes");
 const resumeRoutes = require("./routes/student-routes/resume-routes");
+const assessmentRoutes = require("./routes/instructor-routes/assessment-routes");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -41,9 +43,10 @@ app.use("/student/course", studentViewCourseRoutes);
 app.use("/student/order", studentViewOrderRoutes);
 app.use("/student/courses-bought", studentCoursesRoutes);
 app.use("/student/course-progress", studentCourseProgressRoutes);
-app.use("/student/certificate-page", certificateRoutes);
+app.use("/student/certificate", certificateRoutes);
 app.use("/instructor", instructorRoutes);
 app.use("/resume-automation",resumeRoutes);
+app.use("/instructor/assessment", assessmentRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

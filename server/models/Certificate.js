@@ -7,6 +7,11 @@ const CertificateSchema = new mongoose.Schema({
   courseName: String,
   issueDate: { type: Date, default: Date.now },
   certificateUrl: String,
+  assessmentsCompleted: [{
+    assessmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Assessment' },
+    score: Number,
+    completedAt: Date
+  }]
 });
 
 module.exports = mongoose.model('Certificate', CertificateSchema);

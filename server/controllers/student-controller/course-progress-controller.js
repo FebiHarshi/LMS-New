@@ -1,6 +1,7 @@
 const CourseProgress = require("../../models/CourseProgress");
 const Course = require("../../models/Course");
 const StudentCourses = require("../../models/StudentCourses");
+const Certificate = require("../../models/Certificate");
 
 //mark current lecture as viewed
 const markCurrentLectureAsViewed = async (req, res) => {
@@ -46,18 +47,45 @@ const markCurrentLectureAsViewed = async (req, res) => {
         success: false,
         message: "Course not found",
       });
-    }
-
-    //check all the lectures are viewed or not
+    }    //check all the lectures are viewed or not
     const allLecturesViewed =
       progress.lecturesProgress.length === course.curriculum.length &&
       progress.lecturesProgress.every((item) => item.viewed);
 
+    // Only mark as completed when lectures are viewed
     if (allLecturesViewed) {
       progress.completed = true;
       progress.completionDate = new Date();
-
       await progress.save();
+
+      // Check if certificate already exists
+      const existingCert = await Certificate.findOne({
+        userId: userId,
+        courseId: courseId
+      });
+
+      if (!existingCert) {
+        // Auto-generate certificate
+        const studentCourses = await StudentCourses.findOne({
+          userId: userId,
+          "courses.courseId": courseId
+        });
+
+        if (studentCourses) {
+          const courseRecord = studentCourses.courses.find(c => c.courseId === courseId);
+          if (courseRecord) {
+            const newCert = new Certificate({
+              userId,
+              courseId,
+              userName: courseRecord.studentName,
+              courseName: course.title,
+              issueDate: new Date(),
+              assessmentsCompleted: courseRecord.assessments || []
+            });
+            await newCert.save();
+          }
+        }
+      }
     }
 
     res.status(200).json({

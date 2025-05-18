@@ -2,45 +2,68 @@ import React, { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { generateCertificate } from '@/services';
 
-const CertificateTemplate = ({ userName, courseName, userId, courseId, courseDescription, instructorName }) => {
+const CertificateTemplate = ({ userName, courseName, userId, courseId, courseDescription, instructorName, existingCertificate }) => {
   const certRef = useRef();
-
   const handleGenerate = async () => {
+    if (existingCertificate) {
+      alert('Certificate already exists!');
+      return;
+    }
+
+    if (!userName || !courseId || !userId || !courseName) {
+      alert('Missing required information for certificate generation');
+      return;
+    }
+    
     const canvas = await html2canvas(certRef.current);
     const imgData = canvas.toDataURL('image/png');
 
     // Save to backend
     try {
-      await generateCertificate({
-        userId,
-        courseId,
-        userName,
-        courseName,
+      const response = await generateCertificate({
+        userId: userId.toString(),
+        courseId: courseId.toString(),
+        userName: userName.trim(),
+        courseName: courseName.trim(),
         certificateUrl: imgData,
       });
 
-      alert('Certificate Generated!');
+      if (response.success) {
+        alert('Certificate Generated Successfully!');
+        window.location.reload(); // Reload to show the new certificate
+      } else {
+        alert(response.message || 'Failed to generate certificate. Please try again.');
+      }
     } catch (error) {
       console.error('Error generating certificate:', error);
-      alert('Failed to generate certificate. Please try again.');
+      if (error.response && error.response.data) {
+        alert(error.response.data.message);
+      } else {
+        alert('Failed to generate certificate. Please try again.');
+      }
     }
   };
-
   const handleDownload = async () => {
-    const canvas = await html2canvas(certRef.current);
-    const imgData = canvas.toDataURL('image/png');
-
-    // Save to backend
     try {
+      // If we have an existing certificate, download that
+      if (existingCertificate?.certificateUrl) {
+        const link = document.createElement('a');
+        link.href = existingCertificate.certificateUrl;
+        link.download = `${courseName}-certificate.png`;
+        link.click();
+        return;
+      }
+
+      // Otherwise generate from current view
+      const canvas = await html2canvas(certRef.current);
+      const imgData = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = imgData;
-      link.download = 'certificate.png';
+      link.download = `${courseName}-certificate.png`;
       link.click();
-
-      alert('Certificate Generated!');
     } catch (error) {
-      console.error('Error generating certificate:', error);
-      alert('Failed to generate certificate. Please try again.');
+      console.error('Error downloading certificate:', error);
+      alert('Failed to download certificate. Please try again.');
     }
   };
 
@@ -78,14 +101,21 @@ const CertificateTemplate = ({ userName, courseName, userId, courseId, courseDes
             <h2 className="text-3xl font-bold text-blue-800 my-4">{courseName}</h2>
     
             {/* Course Description */}
-            <div className="mt-8 text-left px-8">
+      <div className="mt-8 text-left px-8">
               <p className="text-gray-700 leading-relaxed text-sm">In this Course,{courseDescription}</p>
             </div>
             <br></br>
-            <p className="mt-4 text-sm">Issued on: {new Date().toLocaleDateString()}</p>
+            <p className="mt-4 text-sm">Issued on: {existingCertificate ? new Date(existingCertificate.issueDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
             {/* Certificate Statement */}
             <div className="text-center italic mb-10 text-gray-600">
               <p>This certificate verifies the completion of all required coursework and assessments as specified by the curriculum.</p>
+              {existingCertificate?.assessmentsCompleted && existingCertificate.assessmentsCompleted.length > 0 && (
+                <p className="mt-2 font-medium text-blue-600">
+                  Completed {existingCertificate.assessmentsCompleted.length} Assessment{existingCertificate.assessmentsCompleted.length > 1 ? 's' : ''} with Average Score: {
+                    Math.round(existingCertificate.assessmentsCompleted.reduce((acc, curr) => acc + curr.score, 0) / existingCertificate.assessmentsCompleted.length)
+                  }%
+                </p>
+              )}
             </div>
           
             {/* Signatures Section */}
@@ -115,13 +145,22 @@ const CertificateTemplate = ({ userName, courseName, userId, courseId, courseDes
       {/* Decorative Line */}
       <div className="flex justify-center my-6">
         <div className="h-px w-full bg-gradient-to-r from-white via-blue-800 to-white"></div>
-      </div>
-      <div className="flex justify-center items-center">
-        <button onClick={handleGenerate} className="mt-5 px-6 py-2 bg-blue-500 text-white rounded">
-          Generate Certificate
-        </button>
+      </div>      <div className="flex justify-center items-center">
+        {!existingCertificate ? (
+          <button 
+            onClick={handleGenerate} 
+            className="mt-5 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+            Generate Certificate
+          </button>
+        ) : (
+          <div className="text-green-600 font-medium mt-5 mr-4">
+            Certificate Generated on {new Date(existingCertificate.issueDate).toLocaleDateString()}
+          </div>
+        )}
         <div className="mx-2"></div>
-        <button onClick={handleDownload} className="mt-5 px-6 py-2 bg-blue-500 text-white rounded">
+        <button 
+          onClick={handleDownload} 
+          className="mt-5 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
           Download Certificate
         </button>
       </div>

@@ -169,16 +169,15 @@ export async function resetCourseProgressService(userId, courseId) {
 
   return data;
 }
-export async function generateCertificate({ userId, courseId, userName, courseName, certificateUrl }) {
-  const { data } = await axiosInstance.post(`/student/certificate-page/${courseId}`, {
-    userId,
-    courseId,
-    userName,
-    courseName,
-    certificateUrl,
-  });
 
-  return data;
+export async function generateCertificate(certificateData) {
+  try {
+    const { data } = await axiosInstance.post('/student/certificate/generate', certificateData);
+    return data;
+  } catch (error) {
+    console.error('Error generating certificate:', error);
+    throw error;
+  }
 }
 
 export async function fetchResumeAutomationData(email) {
@@ -192,5 +191,48 @@ export async function generateResumeAutomationData(formData) {
 }
 export async function fetchLearningPathways() {
   const { data } = await axiosInstance.get(`/instructor/course/get-progress`);
+  return data;
+}
+
+export async function fetchAssessmentList(courseId) {
+  const { data } = await axiosInstance.get(
+    `/instructor/course/get/assessment/${courseId}`
+  );
+
+  return data;
+}
+export async function fetchAssessmentDetails(assessmentId) {
+  const { data } = await axiosInstance.get(
+    `/instructor/course/get/assessment/details/${assessmentId}`
+  );
+
+  return data;
+}
+export async function createAssessment(assessmentData) {  const { data } = await axiosInstance.post(
+    `/instructor/assessment/create`,
+    assessmentData
+  );
+
+  return data;
+}
+export async function updateAssessment(assessmentId, assessmentData) {
+  const { data } = await axiosInstance.put(
+    `/instructor/course/update/assessment/${assessmentId}`,
+    assessmentData
+  );
+
+  return data;
+}
+
+export async function completeAssessment(assessmentId, studentId, score) {
+  const { data } = await axiosInstance.post(
+    `/instructor/assessment/complete`,
+    {
+      assessmentId,
+      studentId,
+      score
+    }
+  );
+
   return data;
 }

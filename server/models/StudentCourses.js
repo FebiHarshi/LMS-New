@@ -10,6 +10,13 @@ const StudentCoursesSchema = new mongoose.Schema({
       instructorName: String,
       dateOfPurchase: Date,
       courseImage: String,
+      assessments: [
+        {
+          assessmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Assessment' },
+          score: Number,
+          completedAt: Date
+        }
+      ]
     },
   ],
 });

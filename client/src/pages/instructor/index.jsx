@@ -1,6 +1,7 @@
 import InstructorCourses from "@/components/instructor-view/courses";
 import InstructorDashboard from "@/components/instructor-view/dashboard";
 import LearningPathwayDashboard from "@/components/instructor-view/learning-pathways";
+import AssessmentForm from "@/components/instructor-view/Assessmentform";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/auth-context";
@@ -8,7 +9,6 @@ import { InstructorContext } from "@/context/instructor-context";
 import { fetchInstructorCourseListService } from "@/services";
 import { BarChart, Book, LogOut, GitBranch } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
-
 function InstructorDashboardpage() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const { resetCredentials } = useContext(AuthContext);
@@ -42,6 +42,12 @@ function InstructorDashboardpage() {
       label: "Learning Pathways",
       value: "learning-pathways",
       component: <LearningPathwayDashboard />,
+    },
+    {
+      icon: GitBranch,
+      label: "Assessment Form",
+      value: "assessment-form",
+      component: <AssessmentForm />,
     },
     {
       icon: LogOut,

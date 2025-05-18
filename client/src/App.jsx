@@ -7,6 +7,7 @@ import { AuthContext } from "./context/auth-context";
 import InstructorDashboardpage from "./pages/instructor";
 import StudentViewCommonLayout from "./components/student-view/common-layout";
 import StudentHomePage from "./pages/student/home";
+import AboutUs from "./pages/aboutus";
 import NotFoundPage from "./pages/not-found";
 import AddNewCoursePage from "./pages/instructor/add-new-course";
 import StudentViewCoursesPage from "./pages/student/course";
@@ -18,6 +19,8 @@ import CertificatePage from "./pages/student/certificate-page";
 import ResumeAutomationPage from "./pages/student/resume-automation";
 import LearningPathwayDashboard from "./components/instructor-view/learning-pathways";
 import AssessmentForm from "./components/instructor-view/Assessmentform";
+import AssessmentTaker from './components/student-view/AssessmentTaker';
+
 function App() {
   const { auth } = useContext(AuthContext);
 
@@ -96,6 +99,7 @@ function App() {
       >
         <Route path="home" element={<StudentHomePage />} />
         <Route path="courses" element={<StudentViewCoursesPage />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route
           path="course-details/:id"
           element={<StudentViewCourseDetailsPage />}
@@ -105,6 +109,10 @@ function App() {
         <Route
           path="course-progress/:id"
           element={<StudentViewCourseProgressPage />}
+        />
+        <Route
+          path="course/:courseId/assessment/:assessmentId"
+          element={<AssessmentTaker />}
         />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

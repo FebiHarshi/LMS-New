@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
+import { createAssessment, fetchInstructorCourseListService } from '../../../services';
+import { useNavigate } from 'react-router-dom';
 
 export default function AssessmentForm() {
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState([]);
+  
   const [assessment, setAssessment] = useState({
     title: '',
     courseId: '',
@@ -13,6 +18,17 @@ export default function AssessmentForm() {
       }
     ]
   });
+
+  useEffect(() => {
+    // Fetch courses when component mounts
+    const fetchCourses = async () => {
+      const response = await fetchInstructorCourseListService();
+      if (response?.success) {
+        setCourses(response.data);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   const handleTitleChange = (e) => {
     setAssessment({
@@ -108,11 +124,46 @@ export default function AssessmentForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-    // Here you would typically send the assessment data to your backend
-    console.log('Assessment submitted:', assessment);
-    alert('Assessment created successfully!');
+
+    // Basic validation
+    if (!assessment.title.trim()) {
+      alert('Please enter an assessment title');
+      return;
+    }
+
+    if (!assessment.courseId) {
+      alert('Please select a course');
+      return;
+    }
+
+    // Validate questions
+    for (const question of assessment.questions) {
+      if (!question.text.trim()) {
+        alert('Please fill in all question texts');
+        return;
+      }
+
+      if (question.options.some(opt => !opt.trim())) {
+        alert('Please fill in all options');
+        return;
+      }
+    }
+
+    try {
+      const response = await createAssessment(assessment);
+
+      if (response?.success) {
+        alert('Assessment created successfully!');
+        navigate(`/instructor/course/${assessment.courseId}`);
+      } else {
+        alert('Failed to create assessment: ' + response?.message);
+      }
+    } catch (error) {
+      console.error('Error creating assessment:', error);
+      alert('Failed to create assessment. Please try again.');
+    }
   };
 
   return (
@@ -135,15 +186,20 @@ export default function AssessmentForm() {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Course ID
+            Select Course
           </label>
-          <input
-            type="text"
+          <select
             value={assessment.courseId}
             onChange={handleCourseIdChange}
             className="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter course ID"
-          />
+          >
+            <option value="">Select a course</option>
+            {courses.map((course) => (
+              <option key={course._id} value={course._id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="mb-6">
