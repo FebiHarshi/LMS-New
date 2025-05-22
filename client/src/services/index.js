@@ -89,16 +89,27 @@ export async function fetchStudentViewCourseListService(query) {
 }
 
 export async function fetchStudentViewCourseDetailsService(courseId) {
+  if (!courseId) throw new Error('Course ID is required');
+  
+  // Ensure courseId is a string and properly encoded
+  const encodedCourseId = encodeURIComponent(courseId.toString());
+  
   const { data } = await axiosInstance.get(
-    `/student/course/get/details/${courseId}`
+    `/student/course/get/details/${encodedCourseId}`
   );
 
   return data;
 }
 
 export async function checkCoursePurchaseInfoService(courseId, studentId) {
+  if (!courseId || !studentId) throw new Error('Course ID and Student ID are required');
+
+  // Ensure IDs are strings and properly encoded
+  const encodedCourseId = encodeURIComponent(courseId.toString());
+  const encodedStudentId = encodeURIComponent(studentId.toString());
+  
   const { data } = await axiosInstance.get(
-    `/student/course/purchase-info/${courseId}/${studentId}`
+    `/student/course/purchase-info/${encodedCourseId}/${encodedStudentId}`
   );
 
   return data;

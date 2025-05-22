@@ -57,34 +57,7 @@ function StudentViewCourseProgressPage() {
         });        if (response?.data?.completed) {
           setCurrentLecture(response?.data?.courseDetails?.curriculum[0]);
           setShowCourseCompleteDialog(true);
-          setShowConfetti(true);
-
-          try {
-            // Ensure IDs and required fields are properly set
-            const userId = auth?.user?._id;
-            const courseId = response?.data?.courseDetails?._id;
-            const userName = auth?.user?.fullName || auth?.user?.userName;
-            const courseName = response?.data?.courseDetails?.title;
-
-            if (userId && courseId && userName && courseName) {
-              await generateCertificate({
-                userId: userId.toString(),
-                courseId: courseId.toString(),
-                userName: userName,
-                courseName: courseName,
-                certificateUrl: ""
-              });
-            } else {
-              console.error('Missing required data for certificate generation:', {
-                userId, courseId, userName, courseName
-              });
-            }
-          } catch (error) {
-            console.error('Error during automatic certificate generation:', error);
-            if (error.response?.data?.message) {
-              console.error('Server message:', error.response.data.message);
-            }
-          }
+          setShowConfetti(true);          await checkAssessmentCompletion();
 
           checkAssessmentCompletion();
           return;
@@ -267,8 +240,7 @@ function StudentViewCourseProgressPage() {
               ? "Congratulations! You've completed the course and passed the assessment. You can now get your certificate!"
               : `${lastScore !== null ? `You scored ${lastScore}% in your last attempt. ` : ''}Take the assessment to get your certificate.`}
           </DialogDescription>
-        </DialogHeader>
-        <div className="flex justify-center gap-4">
+        </DialogHeader>        <div className="flex justify-center gap-4">
           {assessmentPassed ? (
             <Button onClick={() => navigate(`/student/certificate-page/${id}`)}>
               <CheckCircle className="mr-2 h-4 w-4" />

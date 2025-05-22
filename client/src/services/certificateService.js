@@ -34,7 +34,11 @@ export async function fetchCertificate(courseId, userId) {
       throw new Error('Course ID and User ID are required');
     }
     
-    const { data } = await axiosInstance.get(`/student/certificate/${courseId}?userId=${userId}`);
+    // Ensure courseId and userId are strings and properly URI-encoded
+    const encodedCourseId = encodeURIComponent(courseId.toString());
+    const encodedUserId = encodeURIComponent(userId.toString());
+    
+    const { data } = await axiosInstance.get(`/student/certificate/${encodedCourseId}?userId=${encodedUserId}`);
     return data;
   } catch (error) {
     console.error('Error fetching certificate:', error);

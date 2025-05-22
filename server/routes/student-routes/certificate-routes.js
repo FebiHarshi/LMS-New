@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const { generateCertificate } = require('../../controllers/student-controller/certificate-controller');
 const Course = require('../../models/Course');
 const Certificate = require('../../models/Certificate');
@@ -12,6 +13,14 @@ router.get('/:courseId', async (req, res) => {
     try {
         const courseId = req.params.courseId;
         const userId = req.query.userId;
+
+        // Validate MongoDB ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(courseId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid course ID format"
+            });
+        }
         
         // Get course details
         const course = await Course.findById(courseId)
@@ -24,10 +33,10 @@ router.get('/:courseId', async (req, res) => {
             });
         }
 
-        // Get certificate if exists
-        const certificate = await Certificate.findOne({
-            courseId,
-            userId
+        // Get certificate if it exists
+        const certificate = await Certificate.findOne({ 
+            courseId: courseId,
+            userId: userId
         });
 
         res.json({

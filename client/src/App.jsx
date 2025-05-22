@@ -26,7 +26,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/homepage" element={<LMSHomepage />} />
+      <Route path="/" element={<LMSHomepage />} />
       <Route
         path="/auth"
         element={
@@ -85,7 +85,7 @@ function App() {
             authenticated={auth?.authenticate}
             user={auth?.user}
           />
-        } 
+        }
       />
       <Route
         path="/"
@@ -113,10 +113,11 @@ function App() {
         <Route
           path="course/:courseId/assessment/:assessmentId"
           element={<AssessmentTaker />}
-        />
+        /> 
+        <Route path="/student/certificate-page/:courseId" element={<CertificatePage />} />
       </Route>
+      
       <Route path="*" element={<NotFoundPage />} />
-      <Route path="certificate-page/:courseId" element={<CertificatePage />} />
       <Route path="/resume-automation" element={<ResumeAutomationPage />} />
     </Routes>
   );

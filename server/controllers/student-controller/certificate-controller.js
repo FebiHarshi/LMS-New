@@ -87,19 +87,6 @@ exports.generateCertificate = async (req, res) => {
       }
     }    
 
-    // Check for existing certificate
-    const existingCertificate = await Certificate.findOne({
-      userId: new mongoose.Types.ObjectId(userId),
-      courseId: new mongoose.Types.ObjectId(courseId)
-    });
-
-    if (existingCertificate) {
-      return res.status(400).json({
-        success: false,
-        message: "Certificate already exists for this course"
-      });
-    }
-
     // All validations passed, generate certificate
     const newCert = new Certificate({
       userId: new mongoose.Types.ObjectId(userId),

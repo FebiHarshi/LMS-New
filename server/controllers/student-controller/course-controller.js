@@ -1,5 +1,6 @@
 const Course = require("../../models/Course");
 const StudentCourses = require("../../models/StudentCourses");
+const mongoose = require('mongoose');
 
 const getAllStudentViewCourses = async (req, res) => {
   try {
@@ -65,6 +66,16 @@ const getAllStudentViewCourses = async (req, res) => {
 const getStudentViewCourseDetails = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Validate if id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid course ID format",
+        data: null,
+      });
+    }
+
     const courseDetails = await Course.findById(id);
 
     if (!courseDetails) {
@@ -91,6 +102,16 @@ const getStudentViewCourseDetails = async (req, res) => {
 const checkCoursePurchaseInfo = async (req, res) => {
   try {
     const { id, studentId } = req.params;
+
+    // Validate if IDs are valid ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(studentId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+        data: null,
+      });
+    }
+
     const studentCourses = await StudentCourses.findOne({
       userId: studentId,
     });

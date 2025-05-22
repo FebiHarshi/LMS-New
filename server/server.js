@@ -56,7 +56,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+// Handle server startup errors
+const server = app.listen(PORT, () => {
   console.log(`Server is now running on port ${PORT}`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Please try the following:`);
+    console.error('1. Stop any other instance of the server that might be running');
+    console.error('2. Wait a few seconds and try again');
+    console.error('3. Or use a different port by setting the PORT environment variable');
+    process.exit(1);
+  } else {
+    console.error('Server startup error:', err);
+    process.exit(1);
+  }
 });
 
